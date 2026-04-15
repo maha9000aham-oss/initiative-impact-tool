@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>استبانة وبطاقة متابعة وتقويم أثر المبادرة</title>
+  <style>
+    :root{
+      --primary:#0f4c81;
+      --primary-dark:#0b365b;
+      --accent:#dbeafe;
+      --bg:#f7fafc;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --border:#d1d5db;
+      --success:#166534;
+      --warning:#b45309;
+      --danger:#b91c1c;
+      --shadow:0 12px 30px rgba(15,76,129,.12);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Tahoma","Arial",sans-serif;
+      background:linear-gradient(180deg,#eef5fb 0%,#f8fbff 100%);
+      color:var(--text);
+      line-height:1.8;
+    }
+    .wrap{
+      width:min(1100px,92%);
+      margin:32px auto 60px;
+    }
+    .hero{
+      background:linear-gradient(135deg,var(--primary-dark),var(--primary));
+      color:#fff;
+      border-radius:24px;
+      padding:28px 24px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+    }
+    .hero h1{
+      margin:0 0 8px;
+      font-size:clamp(24px,4vw,38px);
+    }
+    .hero p{
+      margin:0;
+      color:#eaf4ff;
+      font-size:15px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid #e5e7eb;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      margin-bottom:18px;
+    }
+    .section-title{
+      margin:0 0 14px;
+      color:var(--primary-dark);
+      font-size:22px;
+    }
+    .sub{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+    .field label{
+      display:block;
+      font-weight:700;
+      margin-bottom:6px;
+      color:var(--primary-dark);
+    }
+    .field input,.field select,.field textarea{
+      width:100%;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px 14px;
+      font:inherit;
+      background:#fff;
+      color:var(--text);
+    }
+    .field textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+    .note-box{
+      background:#f9fcff;
+      border:1px dashed #bfd7ee;
+      border-radius:14px;
+      padding:14px;
+      color:#334155;
+      font-size:14px;
+    }
+    .scale{
+      overflow:auto;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:760px;
+    }
+    th,td{
+      border:1px solid #e5e7eb;
+      padding:12px 10px;
+      text-align:center;
+      vertical-align:middle;
+      font-size:14px;
+    }
+    th{
+      background:#f0f7ff;
+      color:var(--primary-dark);
+      font-weight:700;
+    }
+    td.statement{
+      text-align:right;
+      font-weight:600;
+      min-width:360px;
+    }
+    .axis{
+      background:#f8fbff;
+      color:var(--primary-dark);
+      font-weight:700;
+      text-align:right;
+    }
+    .radio-wrap{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    input[type="radio"]{
+      width:18px;
+      height:18px;
+      accent-color:var(--primary);
+      cursor:pointer;
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+    button{
+      border:none;
+      border-radius:12px;
+      padding:12px 18px;
+      font:inherit;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn-primary{
+      background:var(--primary);
+      color:#fff;
+    }
+    .btn-secondary{
+      background:#e5eef8;
+      color:var(--primary-dark);
+    }
+    .btn-print{
+      background:#111827;
+      color:#fff;
+    }
+    .result-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin-top:16px;
+    }
+    .stat{
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      border-radius:16px;
+      padding:16px;
+      text-align:center;
+    }
+    .stat h3{
+      margin:0 0 6px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .stat strong{
+      font-size:24px;
+      color:var(--primary-dark);
+    }
+    .badge{
+      display:inline-block;
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:700;
+      margin-top:8px;
+    }
+    .high{background:#dcfce7;color:var(--success)}
+    .mid{background:#fef3c7;color:var(--warning)}
+    .low{background:#fee2e2;color:var(--danger)}
+    .hidden{display:none}
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      margin-top:10px;
+      font-size:13px;
+    }
+    @media (max-width:900px){
+      .grid,.result-grid{grid-template-columns:1fr}
+    }
+    @media print{
+      body{background:#fff}
+      .actions,.hero p,.footer{display:none}
+      .card,.hero{box-shadow:none}
+      .wrap{width:100%;margin:0}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>استبانة وبطاقة متابعة وتقويم أثر تطبيق مبادرة منظومة منصات كريمة بنت همام الذكية</h1>
+      <p>أداة علمية كمية ونوعية لقياس جودة التطبيق، والأثر التعليمي، والأثر الإداري، ورضا المستفيدين، والاستدامة المؤسسية.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">البيانات الأولية</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="name">اسم المستجيب</label>
+          <input id="name" type="text" placeholder="اكتب الاسم" />
+        </div>
+        <div class="field">
+          <label for="role">الفئة المستهدفة</label>
+          <select id="role">
+            <option value="">اختر الفئة</option>
+            <option>طالبة</option>
+            <option>معلمة</option>
+            <option>إدارية</option>
+            <option>قيادة مدرسية</option>
+            <option>ولي أمر</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="date">تاريخ التطبيق</label>
+          <input id="date" type="date" />
+        </div>
+        <div class="field">
+          <label for="stage">مرحلة القياس</label>
+          <select id="stage">
+            <option value="">اختر المرحلة</option>
+            <option>قبلي</option>
+            <option>مرحلي</option>
+            <option>بعدي</option>
+            <option>ختامي</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">تعليمات التطبيق</h2>
+      <div class="note-box">
+        يرجى قراءة كل عبارة بدقة، ثم اختيار درجة الموافقة المناسبة وفق المقياس التالي:
+        <br>
+        <strong>5 = أوافق بشدة | 4 = أوافق | 3 = أوافق إلى حد ما | 2 = لا أوافق | 1 = لا أوافق بشدة</strong>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">أداة القياس</h2>
+      <p class="sub">أجب عن جميع العبارات التالية ثم اضغط "حساب النتيجة".</p>
+      <div class="scale">
+        <table>
+          <thead>
+            <tr>
+              <th>العبارة</th>
+              <th>أوافق بشدة<br>5</th>
+              <th>أوافق<br>4</th>
+              <th>أوافق إلى حد ما<br>3</th>
+              <th>لا أوافق<br>2</th>
+              <th>لا أوافق بشدة<br>1</th>
+            </tr>
+          </thead>
+          <tbody id="survey-body"></tbody>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" id="calcBtn">حساب النتيجة</button>
+        <button class="btn-secondary" id="resetBtn" type="button">إعادة الضبط</button>
+        <button class="btn-print" id="printBtn" type="button">طباعة / حفظ PDF</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">الأسئلة المفتوحة</h2>
+      <div class="grid">
+        <div class="field">
+          <label for="impact">ما أبرز أثر حققته المبادرة من وجهة نظرك؟</label>
+          <textarea id="impact" placeholder="اكتب إجابتك هنا"></textarea>
+        </div>
+        <div class="field">
+          <label for="suggestions">ما المقترحات التي تسهم في تطوير المبادرة؟</label>
+          <textarea id="suggestions" placeholder="اكتب إجابتك هنا"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card hidden" id="resultsSection">
+      <h2 class="section-title">نتائج الأداة</h2>
+      <div class="result-grid">
+        <div class="stat">
+          <h3>إجمالي الدرجات</h3>
+          <strong id="totalScore">0</strong>
+        </div>
+        <div class="stat">
+          <h3>الدرجة الكبرى</h3>
+          <strong id="maxScore">125</strong>
+        </div>
+        <div class="stat">
+          <h3>نسبة الأثر</h3>
+          <strong id="impactPercent">0%</strong>
+        </div>
+        <div class="stat">
+          <h3>مستوى الأثر</h3>
+          <strong id="impactLevel">-</strong><br>
+          <span class="badge" id="impactBadge">بانتظار الحساب</span>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:16px;">
+        <div class="field">
+          <label for="summary">أبرز النتائج</label>
+          <textarea id="summary" placeholder="يُكتب هنا ملخص النتائج بعد التحليل"></textarea>
+        </div>
+        <div class="field">
+          <label for="recommendations">التوصيات</label>
+          <textarea id="recommendations" placeholder="تُكتب هنا التوصيات التطويرية"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">بطاقة متابعة تنفيذية مختصرة</h2>
+      <div class="grid">
+        <div class="field">
+          <label>اسم المبادرة</label>
+          <input type="text" value="منظومة منصات كريمة بنت همام الذكية" readonly />
+        </div>
+        <div class="field">
+          <label>الفئة المقاسة</label>
+          <input id="trackedRole" type="text" placeholder="يُعبأ تلقائياً بعد الحساب" readonly />
+        </div>
+        <div class="field">
+          <label>عدد المستجيبين</label>
+          <input id="respondents" type="number" min="1" value="1" />
+        </div>
+        <div class="field">
+          <label>نسبة الرضا / الأثر</label>
+          <input id="trackedPercent" type="text" placeholder="يُعبأ تلقائياً بعد الحساب" readonly />
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">إعداد صفحة HTML تفاعلية لأداة المتابعة والتقويم</div>
+  </div>
+
+  <script>
+    const sections = [
+      {
+        title: "المحور الأول: جودة تطبيق المبادرة",
+        items: [
+          "المنصات الرقمية سهلة الوصول والاستخدام.",
+          "تصميم المنصات واضح وجذاب.",
+          "الخدمات المقدمة عبر المنصات تلبي الاحتياج الفعلي.",
+          "المبادرة أسهمت في تحسين تنظيم العمل داخل المدرسة.",
+          "أدوات المنصات مناسبة للفئات المستفيدة."
+        ]
+      },
+      {
+        title: "المحور الثاني: الأثر التعليمي",
+        items: [
+          "أسهمت المنصات في رفع دافعية الطالبات للتعلم.",
+          "أسهمت المنصات في تحسين التحصيل الدراسي.",
+          "وفرت المنصات تغذية راجعة فورية ومفيدة.",
+          "دعمت المنصات التعلم الذاتي والتفاعل.",
+          "أسهمت المبادرة في تحسين الاستعداد للاختبارات."
+        ]
+      },
+      {
+        title: "المحور الثالث: الأثر الإداري والمهني",
+        items: [
+          "أسهمت المنصات في تسريع إجراءات المتابعة والتقييم.",
+          "حسّنت المبادرة دقة التوثيق وإدارة الشواهد.",
+          "دعمت المبادرة اتخاذ القرار المبني على البيانات.",
+          "أسهمت في رفع كفاءة الأداء الوظيفي.",
+          "خففت المبادرة من بعض الأعباء الإدارية التقليدية."
+        ]
+      },
+      {
+        title: "المحور الرابع: رضا المستفيدين",
+        items: [
+          "أشعر بالرضا عن تجربة استخدام المنصات.",
+          "أوصي بالاستفادة من هذه المنصات داخل المدرسة.",
+          "المبادرة حققت قيمة مضافة واضحة.",
+          "المنصات عززت جودة البيئة التعليمية.",
+          "المبادرة تستحق الاستمرار والتوسع."
+        ]
+      },
+      {
+        title: "المحور الخامس: الاستدامة والأثر المؤسسي",
+        items: [
+          "المبادرة قابلة للاستمرار والتطوير.",
+          "يمكن تطبيق المبادرة في بيئات مدرسية أخرى.",
+          "المنصات تدعم التحول الرقمي المؤسسي.",
+          "المبادرة أسهمت في تحسين الصورة المؤسسية للمدرسة.",
+          "أرى أن للمبادرة أثراً طويل المدى في المجتمع التعليمي."
+        ]
+      }
+    ];
+
+    const surveyBody = document.getElementById("survey-body");
+    let qIndex = 1;
+
+    sections.forEach(section => {
+      const axisRow = document.createElement("tr");
+      axisRow.innerHTML = `<td class="axis" colspan="6">${section.title}</td>`;
+      surveyBody.appendChild(axisRow);
+
+      section.items.forEach(item => {
+        const tr = document.createElement("tr");
+        let radios = "";
+        for(let score = 5; score >= 1; score--){
+          radios += `
+            <td>
+              <div class="radio-wrap">
+                <input type="radio" name="q${qIndex}" value="${score}" aria-label="${item} - ${score}">
+              </div>
+            </td>
+          `;
+        }
+        tr.innerHTML = `<td class="statement">${qIndex}- ${item}</td>${radios}`;
+        surveyBody.appendChild(tr);
+        qIndex++;
+      });
+    });
+
+    const totalQuestions = 25;
+    const maxScore = totalQuestions * 5;
+
+    function getSelectedValue(name){
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      return selected ? Number(selected.value) : null;
+    }
+
+    function getImpactLabel(percent){
+      if(percent >= 85){
+        return {label:"أثر مرتفع جداً", className:"high"};
+      }else if(percent >= 70){
+        return {label:"أثر مرتفع", className:"mid"};
+      }else if(percent >= 50){
+        return {label:"أثر متوسط", className:"mid"};
+      }else{
+        return {label:"أثر يحتاج إلى تحسين", className:"low"};
+      }
+    }
+
+    document.getElementById("calcBtn").addEventListener("click", () => {
+      let total = 0;
+
+      for(let i = 1; i <= totalQuestions; i++){
+        const value = getSelectedValue(`q${i}`);
+        if(value === null){
+          alert(`يرجى الإجابة عن العبارة رقم ${i} قبل حساب النتيجة.`);
+          return;
+        }
+        total += value;
+      }
+
+      const percent = ((total / maxScore) * 100).toFixed(2);
+      const impact = getImpactLabel(Number(percent));
+
+      document.getElementById("totalScore").textContent = total;
+      document.getElementById("maxScore").textContent = maxScore;
+      document.getElementById("impactPercent").textContent = `${percent}%`;
+      document.getElementById("impactLevel").textContent = impact.label;
+
+      const badge = document.getElementById("impactBadge");
+      badge.textContent = impact.label;
+      badge.className = `badge ${impact.className}`;
+
+      document.getElementById("trackedRole").value = document.getElementById("role").value || "غير محدد";
+      document.getElementById("trackedPercent").value = `${percent}%`;
+
+      document.getElementById("resultsSection").classList.remove("hidden");
+      window.scrollTo({ top: document.getElementById("resultsSection").offsetTop - 20, behavior: "smooth" });
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.querySelectorAll('input[type="text"], input[type="date"], input[type="number"], textarea, select').forEach(el => {
+        if(el.id === "respondents"){
+          el.value = 1;
+        }else if(el.hasAttribute("readonly")){
+          el.value = "";
+        }else{
+          el.value = "";
+        }
+      });
+      document.getElementById("resultsSection").classList.add("hidden");
+      document.getElementById("maxScore").textContent = maxScore;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+  </script>
+</body>
+</html>
